@@ -17,6 +17,16 @@ def test_create_and_read_user():
     db = SessionLocal()
 
     try:
+        existing_user = (
+            db.query(User)
+            .filter(User.email == "test@mindbloom.ai")
+            .first()
+        )
+
+        if existing_user:
+            db.delete(existing_user)
+            db.commit()
+
         user = User(
             email="test@mindbloom.ai",
             username="testuser",
@@ -34,6 +44,7 @@ def test_create_and_read_user():
 
         assert saved_user is not None
         assert saved_user.email == "test@mindbloom.ai"
+        assert saved_user.username == "testuser"
 
     finally:
         db.close()
