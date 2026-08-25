@@ -3,12 +3,28 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
 from app.core.config import settings
+from app.core.exceptions import (
+    MindBloomError,
+    generic_error_handler,
+    mindbloom_error_handler,
+)
 
 
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
     description="AI-powered personal wellbeing companion.",
+)
+
+
+app.add_exception_handler(
+    MindBloomError,
+    mindbloom_error_handler,
+)
+
+app.add_exception_handler(
+    Exception,
+    generic_error_handler,
 )
 
 
@@ -26,6 +42,7 @@ def root():
     return {
         "message": "Welcome to MindBloomAI API",
         "version": settings.app_version,
+        "docs": "/docs",
     }
 
 
