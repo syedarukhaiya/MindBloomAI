@@ -21,15 +21,15 @@ app.add_middleware(
 )
 
 
-app.include_router(
-    api_router,
-    prefix="/api/v1",
-)
-
-
 @app.get("/")
 def root():
     return {
         "message": "Welcome to MindBloomAI API",
         "version": settings.app_version,
     }
+
+
+app.include_router(
+    api_router,
+    prefix="/api/v1",
+)
