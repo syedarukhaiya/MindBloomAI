@@ -38,6 +38,8 @@ class User(Base):
         nullable=False,
     )
 
+    badges = relationship("Badge", back_populates="user", cascade="all, delete-orphan")
+
     diary_entries = relationship(
         "DiaryEntry",
         back_populates="user",

@@ -52,10 +52,21 @@ def test_create_diary_entry():
     db = SessionLocal()
 
     try:
+        existing_user = (
+            db.query(User)
+            .filter(User.email == "diary-test@mindbloom.ai")
+            .first()
+        )
+
+        if existing_user:
+            db.delete(existing_user)
+            db.commit()
+
         user = User(
             email="diary-test@mindbloom.ai",
             username="diarytest",
         )
+
         db.add(user)
         db.commit()
         db.refresh(user)
@@ -86,7 +97,36 @@ def test_create_badge():
     db = SessionLocal()
 
     try:
+        user = (
+            db.query(User)
+            .filter(User.email == "badge-test@mindbloom.ai")
+            .first()
+        )
+
+        if not user:
+            user = User(
+                email="badge-test@mindbloom.ai",
+                username="badge_test_user",
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+
+        existing_badge = (
+            db.query(Badge)
+            .filter(
+                Badge.name == "First Entry",
+                Badge.user_id == user.id,
+            )
+            .first()
+        )
+
+        if existing_badge:
+            db.delete(existing_badge)
+            db.commit()
+
         badge = Badge(
+            user_id=user.id,
             name="First Entry",
             description="Created your first diary entry.",
         )
@@ -96,12 +136,12 @@ def test_create_badge():
         db.refresh(badge)
 
         assert badge.id is not None
+        assert badge.user_id == user.id
         assert badge.name == "First Entry"
         assert badge.description == "Created your first diary entry."
 
     finally:
         db.close()
-
 
 def test_user_diary_relationship():
     Base.metadata.create_all(bind=engine)
@@ -109,6 +149,16 @@ def test_user_diary_relationship():
     db = SessionLocal()
 
     try:
+        existing_user = (
+            db.query(User)
+            .filter(User.email == "relationship@mindbloom.ai")
+            .first()
+        )
+
+        if existing_user:
+            db.delete(existing_user)
+            db.commit()
+
         user = User(
             email="relationship@mindbloom.ai",
             username="relationshiptest",
