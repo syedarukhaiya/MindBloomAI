@@ -13,3 +13,5 @@ __all__ = [
     "Achievement",
     "UserAchievement",
 ]
+
+from app.models.mood import MoodEntry

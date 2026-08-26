@@ -22,3 +22,5 @@ api_router.include_router(auth_router)
 api_router.include_router(security_router)
 api_router.include_router(diary_router)
 api_router.include_router(gamification_router)
+
+api_router.include_router(mood_controller.router)
