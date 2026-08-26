@@ -30,6 +30,7 @@ def test_create_and_read_user():
         user = User(
             email="test@mindbloom.ai",
             username="testuser",
+            password_hash="test-password-hash",
         )
 
         db.add(user)
