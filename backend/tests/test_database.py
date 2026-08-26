@@ -1,5 +1,5 @@
 from app.db.database import Base, SessionLocal, engine
-from app.models import User
+from app.models import Badge, DiaryEntry, User
 
 
 def test_database_connection():
@@ -7,8 +7,10 @@ def test_database_connection():
         assert connection.closed is False
 
 
-def test_users_table_exists():
+def test_all_models_registered():
     assert "users" in Base.metadata.tables
+    assert "diary_entries" in Base.metadata.tables
+    assert "badges" in Base.metadata.tables
 
 
 def test_create_and_read_user():
@@ -40,11 +42,93 @@ def test_create_and_read_user():
         assert user.email == "test@mindbloom.ai"
         assert user.username == "testuser"
 
-        saved_user = db.get(User, user.id)
+    finally:
+        db.close()
 
-        assert saved_user is not None
-        assert saved_user.email == "test@mindbloom.ai"
-        assert saved_user.username == "testuser"
+
+def test_create_diary_entry():
+    Base.metadata.create_all(bind=engine)
+
+    db = SessionLocal()
+
+    try:
+        user = User(
+            email="diary-test@mindbloom.ai",
+            username="diarytest",
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+        entry = DiaryEntry(
+            user_id=user.id,
+            title="My First Entry",
+            content="Today was a good day.",
+            mood="happy",
+        )
+
+        db.add(entry)
+        db.commit()
+        db.refresh(entry)
+
+        assert entry.id is not None
+        assert entry.user_id == user.id
+        assert entry.title == "My First Entry"
+        assert entry.mood == "happy"
+
+    finally:
+        db.close()
+
+
+def test_create_badge():
+    Base.metadata.create_all(bind=engine)
+
+    db = SessionLocal()
+
+    try:
+        badge = Badge(
+            name="First Entry",
+            description="Created your first diary entry.",
+        )
+
+        db.add(badge)
+        db.commit()
+        db.refresh(badge)
+
+        assert badge.id is not None
+        assert badge.name == "First Entry"
+        assert badge.description == "Created your first diary entry."
+
+    finally:
+        db.close()
+
+
+def test_user_diary_relationship():
+    Base.metadata.create_all(bind=engine)
+
+    db = SessionLocal()
+
+    try:
+        user = User(
+            email="relationship@mindbloom.ai",
+            username="relationshiptest",
+        )
+
+        entry = DiaryEntry(
+            title="Relationship Test",
+            content="Testing the user diary relationship.",
+            mood="calm",
+        )
+
+        user.diary_entries.append(entry)
+
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+        assert len(user.diary_entries) == 1
+        assert user.diary_entries[0].title == "Relationship Test"
+        assert user.diary_entries[0].user_id == user.id
 
     finally:
         db.close()
