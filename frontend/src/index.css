@@ -1,0 +1,1 @@
+html{scroll-behavior:smooth}body{min-width:320px}::selection{background:#d9c7ec}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #b89bd2;outline-offset:2px}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}

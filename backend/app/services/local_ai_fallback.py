@@ -1,0 +1,4 @@
+def chat_fallback(message:str,listener_mode:bool=False,language:str="English"):
+ if listener_mode: return "I'm here with you. You don't have to make the story neat or solve it right now. What part of this feels hardest to carry?"
+ return "That sounds like a lot to hold at once. We can make it smaller without pretending everything is easy. What feels most urgent right now: the pressure itself, what others expect from you, or what you're worried might happen next?"
+def reflection_fallback(): return "What I hear: You are trying to make sense of something that matters to you.\n\nPossible themes: pressure, uncertainty, and the need for a little space to process.\n\nA gentle next step: choose one small thing you can control today.\n\nJournal prompt: What would feel 5% lighter if you gave yourself permission to do it imperfectly?"
