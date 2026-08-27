@@ -18,3 +18,5 @@ coverage
 *.pyo
 *.log
 .vscode/
+
+backend/.env.backup
