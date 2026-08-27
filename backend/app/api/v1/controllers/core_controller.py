@@ -1471,7 +1471,7 @@ def contact_delete(
 def demo_session(
     db: Session = Depends(get_db),
 ):
-    email = "demo@mindbloom.local"
+    email = "demo@mindbloom.ai"
     username = "Demo Bloom"
 
     user = db.scalar(
